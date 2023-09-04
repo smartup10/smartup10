@@ -1,1 +1,286 @@
-
+import pyautogui 
+from PIL import Image, ImageGrab 
+import time
+import pyautogui 
+from PIL import Image, ImageGrab 
+import time
+​
+def click(key):
+   pyautogui.keyDown(key)
+   return
+def click(key):
+   pyautogui.keyDown(key)
+   return
+​
+def isCollision(data):
+    green_key_pressed = False
+    red_key_pressed = False
+    # Check collision for birds
+    for i in range(200, 1210):
+        for j in range(240, 700):
+            # Extract RGB values of the current pixel
+            red, green, blue = data[i, j]
+            if (green == 66 and red == 36 and blue == 50)or(green == 68 and red == 82 and blue == 29):
+                print('posicionado')
+                
+            
+            # Define the range for green color (adjust these values as needed)
+            if (green == 178 and red == 76 and blue == 124)and not green_key_pressed:
+                print("Green color detected at position ({}, {})".format(i, j))
+                pyautogui.keyDown('alt')
+                #pyautogui.press('c')
+                green_key_pressed = True
+                return
+            if(green == 100 and red == 217 and blue == 100)and not red_key_pressed:
+                print("RED color detected at position ({}, {})".format(i, j))
+                pyautogui.keyDown('alt')
+                #pyautogui.press('v')
+                red_key_pressed = True
+                return
+            
+    
+    # If no green color is detected in the specified region, do something else or return
+    print("No green color detected.")
+​
+    # If no green color is detected in the specified region, do something else or return
+if __name__ == "__main__":
+    time.sleep(2)
+    click('up')
+​
+while True:
+    # Capture the image in color (remove .convert('L'))
+    time.sleep(3)
+    image = ImageGrab.grab()
+    data = image.load()
+    # Draw the rectangle for cactus
+    isCollision(data)
+    #image.show()
+break
+pip install selenium
+​
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+from selenium.webdriver.chrome.service import Service
+​
+# Caminho para o executável do ChromeDriver
+chromedriver_path = r'C:\Users\Rick\Downloads\chromedriver_win32\chromedriver.exe'  # Substitua pelo caminho correto
+service = Service(executable_path=chromedriver_path)
+​
+# Inicializar o navegador
+driver = webdriver.Chrome(service=service)
+​
+# URL do site
+url = 'https://bard.google.com/?hl=pt-BR'  # Substitua pela URL correta
+​
+# Acessar o site
+driver.get(url)
+​
+# Encontrar o elemento textarea pelo nome, ID, classe, XPath, etc.
+textarea = driver.find_element_by_name('nome_do_elemento')  # Substitua pelo seletor correto
+​
+# Digitar texto na textarea
+texto_para_digitar = "Texto que você deseja digitar na textarea."
+textarea.send_keys(texto_para_digitar)
+​
+# Aguardar um pouco para visualização (opcional)
+time.sleep(3)
+​
+​
+from pycaret.regression import setup
+​
+from langchain.schema import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage
+)
+from langchain.chat_models import ChatOpenAI
+​
+chat = ChatOpenAI()
+chat([HumanMessage(content="Translate this sentence from English to French: I love programming.")])
+​
+​
+​
+from pycaret.regression import setup
+import pycaret.classification as pc
+​
+​
+​
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pandas_datareader import data as wb
+​
+from pycaret.regression import *
+from pycaret.utils import check_metric
+from sklearn.metrics import r2_score, median_absolute_error, mean_squared_log_error, mean_squared_error, mean_absolute_error
+     
+    
+caminho_do_arquivo = r'C:\Users\Rick\Desktop\t.csv'
+nome_da_coluna = 'C'
+​
+# Lê o arquivo Excel e seleciona a coluna especificada
+df = pd.read_csv(caminho_do_arquivo, usecols=[nome_da_coluna])
+​
+# Exibe as primeiras linhas do DataFrame
+print(df.head())
+newdata = pd.DataFrame({'Bola1 Formatada': df['Bola1']})
+​
+# Exibe as primeiras linhas do novo DataFrame
+print(newdata.head())
+newdata.describe()
+​
+newdata.plot(figsize=(20,7))
+plt.title('Série de tempo ', size=15)
+plt.xlabel('Período', size=15);
+x_data = []
+y_data = []
+     
+#Formatando a série para que cada linha da base de dados x_data seja composta pelos 5 dias anteriores.
+​
+​
+for d in range(5,newdata.shape[0]):
+    x = newdata.iloc[d -5:d].values.ravel()
+    y = newdata.iloc[d].values[0]
+    x_data.append(x)
+    y_data.append(y)
+     
+#Agora vamos transformar X e y em um único dataset.
+​
+y = pd.DataFrame(y_data)
+X = pd.DataFrame(x_data)
+X['target']=y
+     
+X.head()
+​
+X.shape
+​
+x_treino = X[:-200]
+x_teste = X[-200:]
+reg1 = setup(data =x_treino, target = 'target', fold_strategy='timeseries' ,train_size = 0.8)
+​
+best = compare_models(turbo=False, sort = 'MAE')
+​
+omp = create_model('omp')
+print(omp)
+tune_omp = tune_model(omp)
+print(tune_omp)
+plot_model(tune_omp)
+​
+plot_model(omp, plot='error')
+​
+​
+plot_model(omp, plot='vc')
+​
+predict_model(omp)
+​
+predict_model(omp)[['target','Label']].plot(color=['r','b'],figsize=(20,5));
+​
+import matplotlib.pyplot as plt
+​
+# Assuming 'predictions' is the DataFrame returned by predict_model(omp)
+start_index = 0  # Starting index of the range you want to plot
+end_index = 120    # Ending index of the range you want to plot
+​
+subset = predict_model(omp).iloc[start_index:end_index + 1]  # Select the subset of data
+​
+subset[['target', 'Label']].plot(color=['r', 'b'], figsize=(20, 5))
+plt.show()
+final_omp=finalize_model(omp)
+print(final_omp)
+predict_model(final_omp);
+​
+​
+predicoes = predict_model(final_omp)
+predicoes.head()
+​
+predicoes['target'].plot(figsize=(20,5))
+predicoes['Label'].plot()
+plt.legend(['Valores reais','Valores preditos'], fontsize=15)
+plt.xlabel('Períodos',size=15)
+plt.title('Valores reais e preditos',size=15);
+#x_treino['target'].plot();
+import matplotlib.pyplot as plt
+​
+# Assuming 'predictions' is the DataFrame returned by predict_model(omp)
+start_index = 0  # Starting index of the range you want to plot
+end_index = 120    # Ending index of the range you want to plot
+​
+subset = predict_model(omp).iloc[start_index:end_index + 1]  # Select the subset of data
+​
+subset[['target', 'Label']].plot(color=['r', 'b'], figsize=(20, 5))
+plt.show()
+print('Coeficiente de determinação :',r2_score(predicoes['Label'],predicoes['target']))
+print('Erro absoluto mediano :',median_absolute_error(predicoes['Label'],predicoes['target']))
+print('Erro absoluto logatítmico médio :',mean_squared_log_error(predicoes['Label'],predicoes['target']))
+print('Erro quadrado médio :',mean_squared_error(predicoes['Label'],predicoes['target']))
+print('Erro absoluto mediano :',mean_absolute_error(predicoes['Label'],predicoes['target']))
+     
+    
+final_omp = finalize_model(tune_omp)
+​
+# Save the model
+save_model(final_omp, 'path_to_save')
+loaded_rf = pc.load_model("path_to_save")
+​
+​
+​
+caminho_do_arquivo = r'C:\Users\Rick\Downloads\Loto2.xlsx'
+nome_da_coluna = 'Bola1'
+​
+# Lê o arquivo Excel e seleciona a coluna especificada
+df = pd.read_excel(caminho_do_arquivo, usecols=[nome_da_coluna])
+​
+# Exibe as primeiras linhas do DataFrame
+print(df.head())
+prediction = pc.predict_model(df,)
+print(prediction.head())
+​
+​
+import numpy as np
+import pandas as pd
+from pmdarima import auto_arima
+import matplotlib.pyplot as plt
+​
+# Dados de entrada
+import numpy as np
+import pandas as pd
+from pmdarima import auto_arima
+from sklearn.metrics import mean_squared_error
+​
+# Dados de entrada
+data = [154344, 155518, 151921, 153076, 152268, 151094, 149207, 148323, 146808, 145798, 150627, 145167, 148260, 149724, 151277, 150153, 152110, 151062, 150848, 149188, 150974, 150936, 151746, 149761, 148530, 140879, 145131, 145672, 140715, 137951, 138793, 140690, 139880, 142537, 145069, 136946, 139647, 141965, 144001, 143416, 144484, 143530, 146507, 144861, 145577, 145012, 142223, 140445, 142619, 143976, 145251, 146978, 146532, 144158, 147751, 147996, 148247, 148568, 148002, 149152, 149522, 151054, 151585, 152048, 151704, 150360, 150341, 151548, 151635, 149022, 152473, 150354, 148841, 149429, 147747, 150079, 150498, 153029, 152773, 153723, 149898, 151235, 152348, 153786, 153648, 153898, 153448, 153467, 155198, 154167, 154886, 155773, 156917, 157699, 160562, 161812, 162624, 163168, 162556, 162231, 162649, 161974, 162787, 162618, 161327, 160514, 159545, 161271, 161097, 160452, 161551, 159092, 158912, 158633, 157652, 156529, 159434, 158540, 155635, 158161, 156057, 159533, 159930, 160154, 158968, 156994, 155262, 155908, 156957, 157143, 155169, 156696, 154896, 156808, 155796, 151885, 152928, 152990, 151488, 150346, 152792, 152723, 152022, 151625, 149849, 150464, 148521, 145442, 143922, 145251, 146353, 145276, 149232, 149374, 147140, 148709, 148438, 146679, 146654, 144168, 143793, 145657, 140071, 144070, 141117, 143578, 143848, 142249, 140784, 136841, 135001, 135653, 138354, 140292, 139972, 139542, 135382, 136761, 136207, 139197, 135850, 135727, 136213, 136564, 139049, 137942, 139128, 139505, 140607, 140278, 136458, 133927, 132211, 130191, 133343, 130800, 131341, 128330, 127454, 128975, 130593, 126578, 128074, 128482, 129011, 130118, 132381, 130118, 127758, 126176, 125872, 126054, 124594, 127149, 127636, 129504, 124546, 125714, 124789, 122648, 127454, 128549, 130459, 131408, 131895, 129473, 131420, 131189, 129607, 130704, 131770, 130009, 127678, 127786, 128020, 126540, 128097, 126971, 125815, 126857, 125533, 125144, 121723, 122945, 123915, 123802, 125551, 127906, 127378, 129398, 128217, 128852, 130434, 131632, 131273, 130632, 132777, 134305, 135287, 134736, 134724, 136300, 134245, 134796, 134550, 134592, 135107, 134682, 136000, 136366, 136557, 137965, 138149, 136041, 135165, 133733, 135917, 133804, 133496, 135272, 138060, 138066, 136852, 132389, 132620, 135911, 135686, 133673, 131199, 129873, 132998, 134763, 137196, 138640, 139966, 139972, 142062, 141819, 141369, 142524, 143145, 142654, 144448, 143891, 141162, 139954, 140848, 140102, 138510, 137971, 138466, 137]
+​
+# Número de observações para treinamento
+window_size = 9
+​
+# Preparar dados de treinamento
+X_train = []
+y_train = []
+for i in range(len(data) - window_size):
+    X_train.append(data[i:i+window_size])
+    y_train.append(data[i+window_size])
+X_train = np.array(X_train)
+y_train = np.array(y_train)
+​
+# Criar e treinar o modelo ARIMA
+model = auto_arima(y_train, seasonal=False, suppress_warnings=True)
+​
+# Fazer previsões
+predictions = []
+for i in range(len(data) - window_size):
+    prediction = model.predict(n_periods=1)
+    predictions.append(prediction[0])
+    model.update(data[i+window_size])
+plt.figure(figsize=(10, 6))
+plt.plot(data[window_size:], label='Valores Reais')
+plt.plot(predictions, label='Previsões', linestyle='dashed')
+plt.xlabel('Índice')
+plt.ylabel('Valor')
+plt.title('Previsões do Modelo ARIMA')
+plt.legend()
+plt.show()
+# Calcular o erro médio quadrado
+mse = mean_squared_error(data[window_size:], predictions)
+print("Erro médio quadrado:", mse)
